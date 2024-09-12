@@ -1,0 +1,7 @@
+{
+  "name": "OptiCenter_Movil",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
