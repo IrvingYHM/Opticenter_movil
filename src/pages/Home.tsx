@@ -1,24 +1,27 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React from 'react';
+import { IonContent, IonHeader,IonPage, IonTitle, IonToolbar, IonSplitPane, IonMenuButton, IonSearchbar, IonImg } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import Footer from '../components/Footer';
+import Header from '../components/UI/header';
+import ImageCarousel from '../components/UI/carrucel';
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Blank</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
-      </IonContent>
-    </IonPage>
+      <IonPage id="main-content"> 
+       
+       <Header />
+
+        <IonContent className="">
+         
+          <ImageCarousel />
+          
+          <ExploreContainer />
+          
+        </IonContent>
+
+        <Footer />
+
+      </IonPage>
   );
 };
 
