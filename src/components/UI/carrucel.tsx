@@ -1,46 +1,36 @@
-import React from "react";
-import { IonContent } from "@ionic/react";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-
-import logo from '../../assets/an.png'
-import anuncio from '../../assets/anuncioOpti.jpg'
+import React, { useState, useEffect } from 'react';
+import logo from '../../assets/an.png';
+import anuncio from '../../assets/anuncioOpti.jpg';
+import './ImageCarousel.css'
 
 const ImageCarousel: React.FC = () => {
+  // Arreglo de imágenes
+  const images = [anuncio, logo]; // Puedes agregar más imágenes aquí
+
+  // Estado para controlar la imagen actual
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Función para cambiar a la siguiente imagen
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  // Efecto para el cambio automático de imagen cada 3 segundos
+  useEffect(() => {
+    const intervalId = setInterval(nextImage, 3000); // Cambia cada 3 segundos
+    return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar el componente
+  }, []);
+
   return (
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        navigation={{}}
-        pagination={{ clickable: true }}
-        loop={true}
-        autoplay={{ delay: 5000}}
-        className="mySwiper p-2"
-      >
-        <SwiperSlide>
-          <img
-            className=""
-            src={anuncio}
-            alt="Descriptive alt text for Image 1"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src={logo}
-            alt="Descriptive alt text for Image 2"
-          />
-        </SwiperSlide>
-        {/* Agregar mas imagenes*/}
-        <SwiperSlide>
-          <img
-            src={logo}
-            alt="Descriptive alt text for Image 2"
-          />
-        </SwiperSlide>
-      </Swiper>
+    <div className="p-1">
+      <img
+        src={images[currentImageIndex]}
+        alt={`Image ${currentImageIndex + 1}`}
+        className="carousel-image"
+      />
+      <div className="carousel-controls">
+      </div>
+    </div>
   );
 };
 
