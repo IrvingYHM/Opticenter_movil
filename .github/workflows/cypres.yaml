@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps # Instalar dependencias
 
+      - name: Install Ionic CLI
+        run: npm install -g @ionic/cli   # Instalar Ionic CLI globalmente
+
       - name: Start the Ionic server
         run: |
           npm run start -- --host=0.0.0.0 &
