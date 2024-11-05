@@ -11,7 +11,8 @@
     "test.unit": "vitest",
     "lint": "eslint",
     "start": "ionic serve",
-     "test": "vitest"
+    "test": "vitest",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom'; 
-import Home from './pages/Home';
+import Home from '../pages/Home';
 
 test('se renderiza el carrusel de imágenes', () => {
   render(<Home />); 
