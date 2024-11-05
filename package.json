@@ -10,8 +10,8 @@
     "test.e2e": "cypress run",
     "test.unit": "vitest",
     "lint": "eslint",
-    "start": "ionic serve"
-
+    "start": "ionic serve",
+     "test": "vitest"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
