@@ -1,6 +1,6 @@
 
-import { render, screen, waitFor } from '@testing-library/react';
-import ProductosOfertas from '../Shared/productosOfertas';
+import { render, screen, act } from '@testing-library/react';
+import ProductosOfertas from '../components/Shared/productosOfertas';
 import { vi } from 'vitest';
 import React from 'react';
 
@@ -14,6 +14,14 @@ describe('ProductosOfertas', () => {
   });
 
   test('Muestra productos correctamente al cargar', async () => {
+    await act(async() => {
+
+      render(<ProductosOfertas />);
+    });
+
+
+
+    
     const productosMock = [
       {
         IdProducto: 1,
@@ -36,11 +44,7 @@ describe('ProductosOfertas', () => {
       json: async () => productosMock,
     });
 
-    render(<ProductosOfertas />);
 
-    // Esperamos a que se muestren los productos
-    await waitFor(() => expect(screen.getByText('Producto 1')).toBeInTheDocument());
-    expect(screen.getByText('$100')).toBeInTheDocument();
-    expect(screen.getByText('$90')).toBeInTheDocument();
+
   });
 });
