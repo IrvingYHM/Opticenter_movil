@@ -7,6 +7,10 @@ import {IonContent,IonPage,IonInput,IonButton,IonLabel,IonItem,IonIcon,IonToast,
   import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
   import ReCAPTCHA from 'react-google-recaptcha';
+  /* import { createRequire } from 'module';
+  const require = createRequire(import.meta.url); */
+
+  // ... rest of the code
   import { AuthContext } from '../contexts/Auth';
 import React from 'react';
   
