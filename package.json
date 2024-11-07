@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "start": "ionic serve",
+    "test": "vitest",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
@@ -20,6 +23,8 @@
     "@capacitor/status-bar": "6.0.1",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.7",
@@ -28,6 +33,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
+    "react-toastify": "^10.0.6",
     "swiper": "^11.1.14"
   },
   "devDependencies": {
@@ -36,13 +42,14 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/cypress": "^1.1.6",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-react": "^4.0.1",
     "auto": "^11.2.1",
     "autoprefixer": "^10.4.20",
-    "cypress": "^13.5.0",
+    "cypress": "^13.15.1",
     "eslint": "^8.35.0",
     "eslint-plugin-react": "^7.32.2",
     "jsdom": "^22.1.0",
