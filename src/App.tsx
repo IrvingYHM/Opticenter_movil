@@ -38,6 +38,10 @@ import './theme/variables.css';
 import Menu from './components/Menu';
 import IniciaSesion from './pages/IniciaSesión';
 import Productos from './pages/Productos';
+import RegistroU from './pages/RegistroU';
+import ProductsViewCart from './pages/productosViewCart';
+import DetalleProducto from './pages/Auth/detailProduct';
+import tratamientos from './components/tratamientos';
 
 setupIonicReact();
 
@@ -51,6 +55,11 @@ const App: React.FC = () => (
           <Route path="/Home" component={Home} exact />
           <Route path="/IniciaSesion" component={IniciaSesion} exact /> 
           <Route path="/Productos" component={Productos} exact />
+          <Route path="/RegistroU" component={RegistroU} exact /> 
+          <Route path="/ProductsViewCart"  component={ProductsViewCart} />
+          
+          <Route path="/Tratamiento"  component={tratamientos} />
+          <Route path="/Productos/:id" component={DetalleProducto} /> 
           
 {/*           <Route exact path="/">
             <Redirect to="/home" />

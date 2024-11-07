@@ -1,0 +1,38 @@
+name: Vitest CI
+
+on:
+  push:
+    branches:
+      - main            # Despliegue en producción (cambiar 'master' a 'main' si es tu rama principal)
+      - julio           # Ramas de desarrollo
+      - irving          # Ramas de desarrollo
+      - jesus           # Ramas de desarrollo
+      - feature/*       # Cualquier rama feature
+  pull_request:
+    branches:
+      - main            
+      - julio           
+      - irving          
+      - jesus           
+  workflow_dispatch:     # Activación manual opcional
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3      # Clonar el repositorio
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'           # Configurar la versión de Node.js
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps # Instalar dependencias del proyecto
+
+      - name: Install Ionic CLI (opcional si tu proyecto usa Ionic)
+        run: npm install -g @ionic/cli      # Instalar Ionic CLI globalmente
+
+      - name: Run Vitest
+        run: npm run test:unit              # Ejecutar las pruebas de Vitest
