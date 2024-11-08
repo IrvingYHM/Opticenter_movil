@@ -8,7 +8,7 @@ const Header: React.FC  = () => {
         <IonHeader>
         <IonToolbar>
           <div className="flex items-center p-4 bg-blue-400 ">
-            <IonMenuButton  slot="start"/>
+            <IonMenuButton className="pr-0"  slot="start"/>
             <Buscar />
             <Logo />
           </div>

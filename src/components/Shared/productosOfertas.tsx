@@ -32,7 +32,7 @@ const ProductosOfertas: React.FC = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const api = "https://backopt-production.up.railway.app/productos/ProductosOfertas";
+        const api = "http://localhost:3000/productos/ProductosOfertas";
         const response = await fetch(api, {});
         const data: Producto[] = await response.json();
         if (!response.ok) throw new Error('Error de carga');
@@ -58,14 +58,11 @@ const ProductosOfertas: React.FC = () => {
     fetchProductos();
   }, []);
 
-
-  
-
   return (
     <>
       {loading && <IonLoading isOpen={loading} message={"Cargando productos..."} />}
       {error && <IonToast isOpen={true} message={error} duration={3000} color="danger" />}
-      <IonCard className="p">
+      <IonCard id="productosOfertas" className="p">
         <IonList>
           {productos.map((producto) => (
             <IonItem key={producto.IdProducto} routerLink={`/productos/${producto.IdProducto}`}>
