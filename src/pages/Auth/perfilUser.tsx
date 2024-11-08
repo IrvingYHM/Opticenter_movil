@@ -140,7 +140,7 @@ const ProfileCard: React.FC = () => {
                   className="w-32 h-32 rounded-full"
                   />
                   ) : (
-                  <IonIcon className="w-24 h-24 text-gray-600" icon={person}></IonIcon>
+                    <img src={profileData.foto} className="rounded-full w-44 h-44" />
                 )}
               </div>
             </div>
