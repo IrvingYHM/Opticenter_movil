@@ -13,12 +13,12 @@ interface CartContextType {
   addToCart: (product: Product) => void;
   removeFromCart: (product: Product) => void;
   clearCart: () => void;
+  updateProductQuantity: (IdProducto:number, newQuantity:number) => void;
 }
 
-// Crea el contexto
+
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Crea el proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<Product[]>([]);
 
@@ -55,9 +55,17 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const clearCart = () => {
     setCart([]);
   };
+  
+  const updateProductQuantity = (IdProducto: number, newQuantity: number) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.IdProducto === IdProducto ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateProductQuantity}}>
       {children}
     </CartContext.Provider>
   );

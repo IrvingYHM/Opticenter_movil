@@ -28,7 +28,7 @@ const ProductosVista: React.FC = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const api = "https://backopt-production.up.railway.app/productos/Productos";
+        const api = "http://localhost:3000/productos/Productos";
         const response = await fetch(api, {});
     
         if (!response.ok) {
@@ -87,6 +87,8 @@ const ProductosVista: React.FC = () => {
               <div className="flex justify-between mt-4">
                 {/* Botones para realizar acciones, ir a detalles, etc. */}
                 <IonButton routerLink={`/productos/${producto.IdProducto}`} className="bg-blue-600 text-white hover:bg-blue-800">Detalles</IonButton>
+                <IonButton routerLink={`/Pedidos`} className="bg-blue-600 text-white hover:bg-blue-800">Comprar</IonButton>
+             
               </div>
             </IonCardContent>
           </IonCard>
