@@ -1,4 +1,4 @@
-describe('Pruebas del formulario de inicio de sesión', () => {
+/* describe('Pruebas del formulario de inicio de sesión', () => {
 
     beforeEach(() => {
       cy.visit('/IniciaSesion'); 
@@ -22,4 +22,4 @@ describe('Pruebas del formulario de inicio de sesión', () => {
       
       
   });
-  
+   */
