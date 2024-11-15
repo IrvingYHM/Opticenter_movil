@@ -1,16 +1,11 @@
-
 import {IonContent,IonPage,IonInput,IonButton,IonLabel,IonItem,IonIcon,IonToast,IonCheckbox,IonGrid,IonRow,IonCol,} from '@ionic/react';
   import { useState, useEffect, useRef, useContext } from 'react';
-  import { eyeOff, eye } from 'ionicons/icons';
+  import { eyeOff, eye, person } from 'ionicons/icons';
   import { Link } from 'react-router-dom';
   import { useForm } from 'react-hook-form';
   import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
   import ReCAPTCHA from 'react-google-recaptcha';
-  /* import { createRequire } from 'module';
-  const require = createRequire(import.meta.url); */
-
-  // ... rest of the code
   import { AuthContext } from '../contexts/Auth';
 import React from 'react';
   
@@ -88,6 +83,9 @@ import React from 'react';
 
     return (
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div className='flex justify-center items-center'>
+          <IonIcon className='w-24 h-24' icon={person}></IonIcon>
+        </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <h3 className="text-center font-bold">Iniciar Sesión</h3>
           <form onSubmit={handleSubmit(onSubmit)}>

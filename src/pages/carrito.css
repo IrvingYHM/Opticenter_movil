@@ -1,0 +1,24 @@
+/* CSS para el tamaño del modal */
+.ion-modal-custom {
+  --width: 90%;
+  --height: 25%;
+  --border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.conten {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+  padding: 30px;
+  width: 100%;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espacio entre los elementos del formulario */
+  width: 100%;
+}

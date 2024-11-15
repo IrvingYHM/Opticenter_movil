@@ -53,15 +53,20 @@ import ProfileCard from './pages/Auth/perfilUser';
 import React from 'react';
 import tratamientos from './components/tratamientos';
 import Carrito from './pages/Carrito';
-
+import MenuFooter from './components/menuFooter';
+import Pedido from './pages/pedido';
+import miscitass from './components/miscitas';
+import { SearchProvider } from './contexts/SearcContect';
 
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <>
+   
     <IonApp>
       <IonReactRouter>
+     
         <IonSplitPane contentId='main-content'>
           <Menu />
         <IonRouterOutlet id='main-content'>
@@ -71,8 +76,9 @@ const App: React.FC = () => (
           <Route path="/Productos" component={Productos} exact />
           <Route path="/RegistroU" component={RegistroU} exact /> 
           <Route path="/ProductsViewCart"  component={ProductsViewCart} />
-          
+          <Route path="/miscitas" component={miscitass} exact />
           <Route path="/Tratamiento"  component={tratamientos} />
+          <Route path="/Crearcuenta"  component={RegistroU} />
           <Route path="/Productos/:id" component={DetalleProducto} /> 
           
 
@@ -82,6 +88,8 @@ const App: React.FC = () => (
           <Route path="/HomeAuth" render={() => <RutaProtegida element={<HomeAuth />} />} />
           <Route path="/Perfil" render={() => <RutaProtegida element={<ProfileCard />} />} />
           <Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} />
+          <Route path="/pedido" render={() => <RutaProtegida element={<Pedido />} />} />
+          
         </IonRouterOutlet>
       
         </IonSplitPane>
@@ -89,7 +97,10 @@ const App: React.FC = () => (
       </IonReactRouter>
       
     </IonApp>
+    
     <ToastContainer />
+    <MenuFooter />
+   
   </>
 );
 

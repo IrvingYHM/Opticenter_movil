@@ -48,6 +48,21 @@ const Menu: React.FC = () => {
             <IonMenuToggle>
               <IonItem button routerLink="/IniciaSesion">
                 <IonIcon icon={person} slot="start" />
+                <IonLabel>Mis citas</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          ) : ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/miscitas">
+                <IonIcon icon={person} slot="start" />
+                <IonLabel>Mis citas</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          )}
+          {!isAuthenticated ? ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/IniciaSesion">
+                <IonIcon icon={person} slot="start" />
                 <IonLabel>Iniciar Sesión</IonLabel>
               </IonItem>
             </IonMenuToggle>

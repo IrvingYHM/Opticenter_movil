@@ -1,10 +1,19 @@
-import { IonImg } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
+import { cart } from 'ionicons/icons';
 import React from "react";
-import logo from '../../assets/Logo.png'
+import { useHistory } from 'react-router-dom';
 
 const Logo: React.FC = () => {
-    return(
-        <IonImg src={logo} className='p-1 h-15 w-20'></IonImg>
+    const history = useHistory();
+
+    const navigateToCarrito = () => {
+        history.push('/Carrito');
+    };
+
+    return (
+        <div  onClick={navigateToCarrito}  >
+            <IonIcon icon={cart} className='h-14 w-8' />
+        </div>
     );
 }
 
