@@ -6,7 +6,7 @@ import Header from "../components/UI/header";
 
 const IniciaSesion: React.FC = () =>{
     return(
-    <IonPage id="main-content">
+    <IonPage id="main-content" style={{ marginBottom: '50px' }}>
         <Header />
         
         <IonContent>
@@ -14,8 +14,6 @@ const IniciaSesion: React.FC = () =>{
             <Formulario />
            
         </IonContent>
-
-        <Footer />
     </IonPage>
     );
 }

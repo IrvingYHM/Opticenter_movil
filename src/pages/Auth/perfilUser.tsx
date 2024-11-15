@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {IonContent,IonPage,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonInput,IonButton,IonLoading, IonBackButton,IonButtons,IonIcon,} from "@ionic/react";
 import Header from "../../components/UI/header";
-import { person } from "ionicons/icons";
 
 interface ProfileData {
   vchNomCliente: string;
@@ -120,7 +119,7 @@ const ProfileCard: React.FC = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage style={{ marginBottom: '50px' }}>
       <Header />
           <IonButtons slot="start">
             <IonBackButton></IonBackButton>

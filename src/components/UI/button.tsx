@@ -4,20 +4,28 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth'; 
 
 const Boton: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth(); 
   const history = useHistory();
 
   const handleClick = () => {
     if (isAuthenticated) {
-      console.log('El usuario ya está autenticado');
+      logout();
+      console.log('Usuario ha cerrado sesión');
     } else {
-      history.push('/IniciaSesion'); 
+      history.push('/IniciaSesion');
     }
   };
 
   return (
     <div className='justify-center text-center items-center'>
-      {!isAuthenticated && (
+      {isAuthenticated ? (
+        <IonButton
+          onClick={handleClick}
+          className='w-4/5'
+        >
+          Cerrar sesión
+        </IonButton>
+      ) : (
         <IonButton
           onClick={handleClick}
           className='w-4/5'

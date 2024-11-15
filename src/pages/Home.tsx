@@ -1,23 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonContent, IonHeader,IonPage, IonTitle, IonToolbar, IonSplitPane, IonMenuButton, IonSearchbar, IonImg, IonCard, IonLabel, IonButton, IonRouterLink, IonList, IonItem, IonIcon, IonAvatar, IonButtons } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import Footer from '../components/Footer';
 import Header from '../components/UI/header';
 import ImageCarousel from '../components/UI/carrucel';
 import ProductosOfertas from '../components/Shared/productosOfertas';
-import ventas from '../assets/Venta.png';
-import { personCircle, search } from 'ionicons/icons';
 import CategoriasCarrucel from '../components/UI/CategoriasCarrucel';
 import ProductosViewCart from './productosViewCart';
+import { useSearchContext } from '../contexts/SearcContect';
+import HomeOne from '../components/home';
 
 const Home: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const { searchText, results, setResults } = useSearchContext();
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (searchText.trim() === "") {
+        setResults([]);
+        return;
+      }
+      try {
+        const response = await fetch(`https://backopt-production.up.railway.app/productos/Buscar_productos?busqueda=${searchText}`);
+        if (response.ok) {
+          const data = await response.json();
+          setResults(data);
+        } else {
+          setResults([]);
+        }
+      } catch {
+        setResults([]);
+      }
+    };
+    fetchResults();
+  }, [searchText, setResults]);
+
+  const handleSearch = async (searchTerm: string) => {
+    if (searchTerm.trim() === '') {
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`https://backopt-production.up.railway.app/productos/Buscar_productos?busqueda=${searchTerm}`);
+      if (!response.ok) {
+        throw new Error('Error al realizar la búsqueda');
+      }
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error('Error al realizar la búsqueda:', error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
-      <IonPage id="main-content"> 
+      <IonPage id="main-content" style={{ marginBottom: '30px' }}> 
 
        <Header />
 
         <IonContent>
-         
+          {results.length > 0 && (
+            <IonList>
+              {results.map((product) => (
+                <IonRouterLink key={product.IdProducto} routerLink={`/productos/${product.IdProducto}`}>
+                <IonItem >
+                  <IonLabel>{product.vchNombreProducto}</IonLabel>
+                </IonItem>
+                </IonRouterLink>
+              ))}
+            </IonList>
+          )}
+       
           <ImageCarousel />
           <IonCard >
             <IonLabel>
@@ -29,9 +85,11 @@ const Home: React.FC = () => {
             </IonLabel>
           </IonCard>
           
+          <HomeOne />
 
           <CategoriasCarrucel />
           
+          <p className='text-center'>Productos en oferta</p>
           <ProductosOfertas />
           
           <IonCard className='p-2'>

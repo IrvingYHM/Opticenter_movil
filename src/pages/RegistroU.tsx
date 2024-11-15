@@ -1,11 +1,11 @@
-import { IonContent, IonDatetime, IonInput, IonLabel, IonPage, IonSelect, IonSelectOption } from "@ionic/react";
+<IonDatetimeButton datetime="datetime"></IonDatetimeButton>
+import { IonContent, IonDatetime, IonDatetimeButton, IonInput, IonLabel, IonModal, IonPage, IonSelect, IonSelectOption } from "@ionic/react";
 import React from "react";
 import Header from "../components/UI/header";
-import Label from "../components/UI/label";
 
 const RegistroU: React.FC =()=>{
     return(
-        <IonPage>
+        <IonPage style={{ marginBottom: '50px' }}>
             <Header />
             <IonContent>
                 <div className="">
@@ -61,12 +61,15 @@ const RegistroU: React.FC =()=>{
                             </div>
                             <div className="flex items-center justify-between">
                                 <IonLabel 
-                                className="block text-sm font-bold leading-6 text-gray-900">
+                                className="flex text-sm font-bold leading-6 text-gray-900">
                                     Fecha de nacimiento:
                                 </IonLabel>
                             </div>
                             <div className="flex items-center mt-2">
-                                <IonDatetime></IonDatetime>
+                                <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
+                                <IonModal keepContentsMounted={true}>
+                                    <IonDatetime id="datetime"></IonDatetime>
+                                </IonModal>
                             </div>
                         </form>
                     </div>

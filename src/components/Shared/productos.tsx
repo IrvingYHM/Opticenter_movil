@@ -28,7 +28,7 @@ const ProductosVista: React.FC = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const api = "http://localhost:3000/productos/Productos";
+        const api = "https://backopt-production.up.railway.app/productos/Productos";
         const response = await fetch(api, {});
     
         if (!response.ok) {
@@ -73,7 +73,7 @@ const ProductosVista: React.FC = () => {
 
       <h1 className="text-2xl font-bold text-center mb-3">Productos</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1">
+      <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-1">
         {productos.map((producto) => (
           <IonCard key={producto.IdProducto} className="w-auto mx-4 my-2 p-4 items-center justify-center">
             <IonImg className="mx-auto" src={producto.vchNomImagen} alt={producto.vchNombreProducto} />
@@ -86,9 +86,7 @@ const ProductosVista: React.FC = () => {
             <IonCardContent>
               <div className="flex justify-between mt-4">
                 {/* Botones para realizar acciones, ir a detalles, etc. */}
-                <IonButton routerLink={`/productos/${producto.IdProducto}`} className="bg-blue-600 text-white hover:bg-blue-800">Detalles</IonButton>
-                <IonButton routerLink={`/Pedidos`} className="bg-blue-600 text-white hover:bg-blue-800">Comprar</IonButton>
-             
+                <IonButton routerLink={`/productos/${producto.IdProducto}`} className="bg-blue-600 text-white hover:bg-blue-800 ">Detalles</IonButton>
               </div>
             </IonCardContent>
           </IonCard>

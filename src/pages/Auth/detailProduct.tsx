@@ -4,15 +4,20 @@ import {
   IonContent, IonHeader, IonPage, IonToolbar, IonCard,
   IonCardHeader, IonCardTitle, IonCardContent, IonImg, IonLoading,
   IonButton, IonBackButton, IonButtons,
-  IonInput
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRouterLink
 } from '@ionic/react';
 import Header from '../../components/UI/header';
 import { addProductToCart } from '../../services/Apis';
 import Tratamientos from '../../components/tratamientos';
 import GraduationsView from '../../components/graduaciones';
 import {toast} from 'react-toastify';
-
+import '../../components/ExploreContainer.css'
 import { loadStripe } from '@stripe/stripe-js';
+import { useSearchContext } from '../../contexts/SearcContect';
 
 const stripePromise = loadStripe('pk_test_51QF7CwP4u0AspHWqVkcLHlGObKirereYBP7bQJOetZ3Bgv1HQDXfCaEQBWM8cv3kvJ69rNvjdOwsMw4nzqgSxGhN00ik1ViWMd');
 
@@ -65,7 +70,7 @@ const DetalleProducto: React.FC = () => {
         }
         const data = await response.json();
         setProducto(data);
-        setTotalPrice(Number(data.Precio)); // Precio base del producto
+        setTotalPrice(Number(data.Precio)); 
       } catch (error) {
         console.error(error);
       } finally {
@@ -88,6 +93,7 @@ const DetalleProducto: React.FC = () => {
 
   const handleGraduationChange = (graduation: any) => {
     setSelectedGraduation(graduation);
+    console.log("Selected Graduation ID:", graduation?.IdGraduacion);
   };
 
   //funcion para agregar  el carrito, primero buscar si tiene carrito 
@@ -98,12 +104,12 @@ const DetalleProducto: React.FC = () => {
     if (token) {
       const decodedToken = parseJwt(token);
       setUserType(decodedToken.userType);
-      /*       setNombreUsuario(decodedToken.nombre); */
+   
       setClienteId(decodedToken.clienteId);
 
       setusuarioLogueado(true);
       console.log(clienteId);
-      /*  console.log(nombreUsuario) */
+      
     }
   }, [/* nombreUsuario */ clienteId]);
 
@@ -160,12 +166,14 @@ const DetalleProducto: React.FC = () => {
       });
   
       if (detallesCarritoResponse.ok) {
+        
         toast.success("Producto(s) agregado(s) al carrito.");
         setTimeout(() => {
           history.push("/carrito");
         }, 3000);
       } else {
         throw new Error("Error al agregar producto al carrito.");
+       
       }
     } catch (error) {
       console.error(error);
@@ -177,7 +185,7 @@ const DetalleProducto: React.FC = () => {
     const stripe = await stripePromise;
 
     // Crea el PaymentIntent en tu servidor
-    const response = await fetch('http://localhost:3000/create-checkout-session', {
+    const response = await fetch('https://backopt-production.up.railway.app/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -223,7 +231,7 @@ const DetalleProducto: React.FC = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage  style={{ marginBottom: '50px' }}>
       <Header />
       <IonHeader>
         <IonToolbar>
@@ -233,6 +241,7 @@ const DetalleProducto: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+      
         <IonCard>
           <IonCardTitle className='text-center text-bold '>{producto.vchNombreProducto} - {producto.vchDescripcion}</IonCardTitle>
           <IonImg src={producto.vchNomImagen} alt={producto.vchNombreProducto} />
