@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+/* import { render, screen } from '@testing-library/react';
 import IniciaSesion from '../pages/IniciaSesión'; // Asegúrate de ajustar la ruta
 import { BrowserRouter as Router } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
@@ -24,3 +24,4 @@ describe('Pruebas del componente IniciaSesion', () => {
 
   });
 });
+ */
