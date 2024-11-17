@@ -57,6 +57,9 @@ import MenuFooter from './components/menuFooter';
 import Pedido from './pages/pedido';
 import miscitass from './components/miscitas';
 import { SearchProvider } from './contexts/SearcContect';
+import CrearCita from './components/agendarCita';
+import MiCompra from './pages/misCompras';
+import CreatePedido from './pages/pedido';
 
 
 setupIonicReact();
@@ -83,12 +86,14 @@ const App: React.FC = () => (
           
 
         {/**Rutas Protegidas */}
-          <Route path="/AgendaCita" render={() => <RutaProtegida element={<AgendaCita />} />} />
+          <Route path="/AgendaCita" render={() => <RutaProtegida element={<CrearCita />} />} />
         {/**<Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} /> */} 
           <Route path="/HomeAuth" render={() => <RutaProtegida element={<HomeAuth />} />} />
           <Route path="/Perfil" render={() => <RutaProtegida element={<ProfileCard />} />} />
           <Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} />
-          <Route path="/pedido" render={() => <RutaProtegida element={<Pedido />} />} />
+          <Route path="/misCompras" render={() => <RutaProtegida element={<MiCompra />} />} />
+          
+          <Route path="/pedido" render={() => <RutaProtegida element={<CreatePedido />} />} />
           
         </IonRouterOutlet>
       

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef  } from "react";
 import { useParams,useHistory } from 'react-router-dom';
 import Header from "../components/UI/header";
 import { loadStripe, PaymentIntent } from '@stripe/stripe-js';
-import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement, CardCvcElement,CardNumberElement,CardExpiryElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { toast } from 'react-toastify';
 import './carrito.css';
 import { useSearchContext } from "../contexts/SearcContect";
@@ -175,7 +175,7 @@ const Carrito: React.FC = () => {
                     console.log('Pago confirmado en el backend');
                     
                     setTimeout(() => {
-                        history.push("/HomeAuth");
+                        history.push("/misCompras");
                       }, 3000);
                 } else {
                     toast.error('Error al confirmar el pago');

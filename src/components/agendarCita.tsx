@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { format } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 import { useSearchContext } from "../contexts/SearcContect";
+import Header from "./UI/header";
 
 // Función para decodificar el JWT
 function parseJwt(token: string) {
@@ -131,65 +132,11 @@ const CrearCita = () => {
     }
   };
 
-    const { searchText, results, setResults } = useSearchContext();
-
-    useEffect(() => {
-      const fetchResults = async () => {
-        if (searchText.trim() === "") {
-          setResults([]);
-          return;
-        }
-        try {
-          const response = await fetch(`https://backopt-production.up.railway.app/productos/Buscar_productos?busqueda=${searchText}`);
-          if (response.ok) {
-            const data = await response.json();
-            setResults(data);
-          } else {
-            setResults([]);
-          }
-        } catch {
-          setResults([]);
-        }
-      };
-      fetchResults();
-    }, [searchText, setResults]);
-  
-    const handleSearch = async (searchTerm: string) => {
-      if (searchTerm.trim() === '') {
-        setResults([]);
-        return;
-      }
-  
-      setLoading(true);
-      try {
-        const response = await fetch(`http://localhost:3000/productos/Buscar_productos?busqueda=${searchTerm}`);
-        if (!response.ok) {
-          throw new Error('Error al realizar la búsqueda');
-        }
-        const data = await response.json();
-        setResults(data);
-      } catch (error) {
-        console.error('Error al realizar la búsqueda:', error);
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    };
  
   return (
     <IonPage id="main-content" style={{ marginBottom: '50px' }}>
+      <Header />
       <IonContent>
-      {results.length > 0 && (
-            <IonList>
-              {results.map((product) => (
-                <IonRouterLink key={product.IdProducto} routerLink={`/productos/${product.IdProducto}`}>
-                <IonItem >
-                  <IonLabel>{product.vchNombreProducto}</IonLabel>
-                </IonItem>
-                </IonRouterLink>
-              ))}
-            </IonList>
-          )}
         <ToastContainer position="top-center" />
         <h1 className="ion-text-center">Agendar Cita</h1>
         <IonItem>

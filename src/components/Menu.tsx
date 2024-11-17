@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonMenu, IonHeader, IonContent, IonList, IonItem, IonLabel, IonMenuToggle, IonIcon } from '@ionic/react';
-import { home, cart, bag, calendar, person, people, call } from "ionicons/icons";
+import { home, cart, bag, calendar, person, people, call, pricetag, logOut } from "ionicons/icons";
 import IconoRedondo from './UI/iconoUser';
 import Boton from './UI/button';
 import { useAuth } from './../contexts/Auth'; 
@@ -62,6 +62,21 @@ const Menu: React.FC = () => {
           {!isAuthenticated ? ( 
             <IonMenuToggle>
               <IonItem button routerLink="/IniciaSesion">
+                <IonIcon icon={pricetag} slot="start" />
+                <IonLabel>Mis Pedidos</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          ) : ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/misCompras">
+                <IonIcon icon={pricetag} slot="start" />
+                <IonLabel>Mis Pedidos</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          )}
+          {!isAuthenticated ? ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/IniciaSesion">
                 <IonIcon icon={person} slot="start" />
                 <IonLabel>Iniciar Sesión</IonLabel>
               </IonItem>
@@ -86,6 +101,21 @@ const Menu: React.FC = () => {
               <IonLabel>Contacto : +52 77#######</IonLabel>
             </IonItem>
           </IonMenuToggle>
+          {!isAuthenticated ? ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/IniciaSesion">
+                <IonIcon icon={logOut} slot="start" />
+                <IonLabel>Salir</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          ) : ( 
+            <IonMenuToggle>
+              <IonItem button routerLink="/misCompras">
+                <IonIcon icon={logOut} slot="start" />
+                <IonLabel>Salir</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          )}
         </IonList>
       </IonContent>
     </IonMenu>
