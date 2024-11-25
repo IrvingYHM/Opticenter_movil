@@ -18,6 +18,8 @@ import {toast} from 'react-toastify';
 import '../../components/ExploreContainer.css'
 import { loadStripe } from '@stripe/stripe-js';
 import { useSearchContext } from '../../contexts/SearcContect';
+import MostrarComentarios from '../../components/mostrarComentarios';
+import Comentarios from '../../components/comentarios';
 
 const stripePromise = loadStripe('pk_test_51QF7CwP4u0AspHWqVkcLHlGObKirereYBP7bQJOetZ3Bgv1HQDXfCaEQBWM8cv3kvJ69rNvjdOwsMw4nzqgSxGhN00ik1ViWMd');
 
@@ -321,6 +323,20 @@ const DetalleProducto: React.FC = () => {
                 Comprar
               </IonButton>
             </div>
+        </IonCard>
+        {/* Sección para los comentarios */}
+        <IonCard>
+          <Comentarios IdProducto={Number(id)} />
+        </IonCard>
+
+        {/** */}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Comentarios</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <MostrarComentarios IdProducto={Number(id)} />
+          </IonCardContent>
         </IonCard>
       </IonContent>
     </IonPage>

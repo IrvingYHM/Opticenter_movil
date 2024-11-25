@@ -44,7 +44,7 @@ import IniciaSesion from './pages/IniciaSesión';
 import AgendaCita from './pages/AgendaCita';
 /* import detalleCarrito from './pages/Carrito'; */
 import Productos from './pages/Productos';
-import RegistroU from './pages/RegistroU';
+import Registro from './components/RegistroP';
 import ProductsViewCart from './pages/productosViewCart';
 import RutaProtegida from './pages/RutaProtegida';
 import HomeAuth from './pages/Auth/Home'
@@ -57,6 +57,10 @@ import MenuFooter from './components/menuFooter';
 import Pedido from './pages/pedido';
 import miscitass from './components/miscitas';
 import { SearchProvider } from './contexts/SearcContect';
+import CrearCita from './components/agendarCita';
+import MiCompra from './pages/misCompras';
+import CreatePedido from './pages/pedido';
+import AcercaDe from './components/Acercade';
 
 
 setupIonicReact();
@@ -74,21 +78,24 @@ const App: React.FC = () => (
           <Route path="/Home" component={Home} exact />
           <Route path="/IniciaSesion" component={IniciaSesion} exact />
           <Route path="/Productos" component={Productos} exact />
-          <Route path="/RegistroU" component={RegistroU} exact /> 
+          <Route path="/RegistroU" component={Registro} exact /> 
           <Route path="/ProductsViewCart"  component={ProductsViewCart} />
           <Route path="/miscitas" component={miscitass} exact />
           <Route path="/Tratamiento"  component={tratamientos} />
-          <Route path="/Crearcuenta"  component={RegistroU} />
+          <Route path="/Crearcuenta"  component={Registro} />
           <Route path="/Productos/:id" component={DetalleProducto} /> 
           
+          <Route path="/Acercade"  component={AcercaDe} />
 
         {/**Rutas Protegidas */}
-          <Route path="/AgendaCita" render={() => <RutaProtegida element={<AgendaCita />} />} />
+          <Route path="/AgendaCita" render={() => <RutaProtegida element={<CrearCita />} />} />
         {/**<Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} /> */} 
           <Route path="/HomeAuth" render={() => <RutaProtegida element={<HomeAuth />} />} />
           <Route path="/Perfil" render={() => <RutaProtegida element={<ProfileCard />} />} />
           <Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} />
-          <Route path="/pedido" render={() => <RutaProtegida element={<Pedido />} />} />
+          <Route path="/misCompras" render={() => <RutaProtegida element={<MiCompra />} />} />
+          
+          <Route path="/pedido" render={() => <RutaProtegida element={<CreatePedido />} />} />
           
         </IonRouterOutlet>
       

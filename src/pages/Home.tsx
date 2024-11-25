@@ -75,6 +75,8 @@ const Home: React.FC = () => {
           )}
        
           <ImageCarousel />
+        
+
           <IonCard >
             <IonLabel>
               <h2 className="font-bold text-center text-black text-2xl">¡Crea una cuenta y mejora tu experiencia!</h2>
@@ -87,7 +89,6 @@ const Home: React.FC = () => {
           
           <HomeOne />
 
-          <CategoriasCarrucel />
           
           <p className='text-center'>Productos en oferta</p>
           <ProductosOfertas />

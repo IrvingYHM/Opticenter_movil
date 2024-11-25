@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { IonContent, IonPage, IonButton, IonSelect, IonSelectOption, IonLabel, IonItem, IonDatetime, IonText, IonSpinner, IonTextarea, IonList, IonRouterLink } from "@ionic/react";
+import {
+  IonContent,
+  IonPage,
+  IonButton,
+  IonSelect,
+  IonSelectOption,
+  IonLabel,
+  IonItem,
+  IonDatetime,
+  IonText,
+  IonSpinner,
+  IonTextarea,
+  IonList,
+  IonModal,
+  IonIcon,
+  IonToast,
+} from "@ionic/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { format } from 'date-fns';
-import { useHistory } from 'react-router-dom';
-import { useSearchContext } from "../contexts/SearcContect";
+import { format } from "date-fns";
+import { useHistory } from "react-router-dom";
+import Header from "./UI/header";// Paquete para estrellas
+import { star, starOutline } from "ionicons/icons"; // Importar los iconos de estrella
+
+
 
 // Función para decodificar el JWT
 function parseJwt(token: string) {
@@ -30,7 +49,25 @@ const CrearCita = () => {
   const [descripcionT, setDescripcionT] = useState("");
   const [horarios, setHorarios] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showEncuesta, setShowEncuesta] = useState(false); // Estado para mostrar la encuesta
+  
+  const preguntas = [
+    "¿Qué tan fácil fue encontrar la información que buscabas?",
+    "¿Cómo calificarías la facilidad de uso del sistema para agendar tu cita?",
+    "¿Qué tan satisfecho estás con el proceso de agendar una cita?",
+    "¿Qué tan rápido te pareció el sistema para agendar tu cita?",
+    "¿Qué tan claro fue el mensaje de confirmación de tu cita?",
+  ];
+  const [respuestas, setRespuestas] = useState<number[]>(new Array(preguntas.length).fill(0)); // Inicializa un array con tantas respuestas como preguntas
 
+
+
+  const handleStarClick = (index: number, rating: number) => {
+    const newRespuestas = [...respuestas];
+    newRespuestas[index] = rating; // Asigna la calificación a la pregunta seleccionada
+    setRespuestas(newRespuestas);
+  };
+  
   const tiposCita = [
     { id: 1, nombre: "Examen de vista", costo: 100 },
     { id: 2, nombre: "Ajuste de Gafas", costo: 150 },
@@ -39,7 +76,7 @@ const CrearCita = () => {
     { id: 5, nombre: "Otro", costo: 180 },
   ];
 
-  const history = useHistory(); // Hook para manejar la redirección
+  const history = useHistory();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -63,10 +100,12 @@ const CrearCita = () => {
   };
 
   const fetchHorariosDisponibles = async (fecha: string) => {
-    const fechaFormateada = format(new Date(fecha), 'yyyy-MM-dd');
+    const fechaFormateada = format(new Date(fecha), "yyyy-MM-dd");
     setLoading(true);
     try {
-      const response = await fetch(`https://backopt-production.up.railway.app/horarios/HrPorFecha?fecha=${fechaFormateada}`);
+      const response = await fetch(
+        `https://backopt-production.up.railway.app/horarios/HrPorFecha?fecha=${fechaFormateada}`
+      );
       const data = await response.json();
 
       if (data && data.length > 0) {
@@ -99,27 +138,28 @@ const CrearCita = () => {
       (idTipoCita !== 5 || (idTipoCita === 5 && descripcionT))
     ) {
       try {
-        const citaResponse = await fetch("https://backopt-production.up.railway.app/cita", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            Fecha: format(new Date(selectFecha), 'yyyy-MM-dd'),
-            Hora: selectHora,
-            IdCliente: idCliente,
-            IdTipoCita: idTipoCita,
-            Costo: costo,
-            IdEstadoCita: 1,
-            DescripcionT: idTipoCita === 5 ? descripcionT : null,
-          }),
-        });
+        const citaResponse = await fetch(
+          "https://backopt-production.up.railway.app/cita",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              Fecha: format(new Date(selectFecha), "yyyy-MM-dd"),
+              Hora: selectHora,
+              IdCliente: idCliente,
+              IdTipoCita: idTipoCita,
+              Costo: costo,
+              IdEstadoCita: 1,
+              DescripcionT: idTipoCita === 5 ? descripcionT : null,
+            }),
+          }
+        );
 
         if (citaResponse.status === 201) {
           toast.success("Cita agendada exitosamente");
-          setTimeout(() => {
-          window.location.href = "/miscitas"; 
-        }, 4000);
+          setShowEncuesta(true); // Mostrar encuesta al finalizar
         } else {
           toast.error("Hubo un problema al agendar la cita");
         }
@@ -131,102 +171,70 @@ const CrearCita = () => {
     }
   };
 
-    const { searchText, results, setResults } = useSearchContext();
+  const enviarEncuesta = async () => {
+    try {
+      const response = await fetch(
+        "https://backopt-production.up.railway.app/EncuestaM",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            idUsuario: idCliente, respuestas 
+          }),
+        }
+      );
 
-    useEffect(() => {
-      const fetchResults = async () => {
-        if (searchText.trim() === "") {
-          setResults([]);
-          return;
-        }
-        try {
-          const response = await fetch(`https://backopt-production.up.railway.app/productos/Buscar_productos?busqueda=${searchText}`);
-          if (response.ok) {
-            const data = await response.json();
-            setResults(data);
-          } else {
-            setResults([]);
-          }
-        } catch {
-          setResults([]);
-        }
-      };
-      fetchResults();
-    }, [searchText, setResults]);
-  
-    const handleSearch = async (searchTerm: string) => {
-      if (searchTerm.trim() === '') {
-        setResults([]);
-        return;
+      if (response.ok) {
+        toast.success("Gracias por completar la encuesta");
+      } else {
+        toast.error("Error al enviar la encuesta");
       }
-  
-      setLoading(true);
-      try {
-        const response = await fetch(`http://localhost:3000/productos/Buscar_productos?busqueda=${searchTerm}`);
-        if (!response.ok) {
-          throw new Error('Error al realizar la búsqueda');
-        }
-        const data = await response.json();
-        setResults(data);
-      } catch (error) {
-        console.error('Error al realizar la búsqueda:', error);
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    };
- 
+    } catch (error) {
+      toast.error("Error al enviar la encuesta");
+    } finally {
+      setShowEncuesta(false);
+      history.push("/miscitas");
+    }
+  };
+
   return (
-    <IonPage id="main-content" style={{ marginBottom: '50px' }}>
+    <IonPage id="main-content" style={{ marginBottom: '10px'}}>
+      <Header />
+      <IonToast />
       <IonContent>
-      {results.length > 0 && (
-            <IonList>
-              {results.map((product) => (
-                <IonRouterLink key={product.IdProducto} routerLink={`/productos/${product.IdProducto}`}>
-                <IonItem >
-                  <IonLabel>{product.vchNombreProducto}</IonLabel>
-                </IonItem>
-                </IonRouterLink>
-              ))}
-            </IonList>
-          )}
-        <ToastContainer position="top-center" />
-        <h1 className="ion-text-center">Agendar Cita</h1>
+        
+        <h1 className="ion-text-center">Agendar Citas</h1>
+       
         <IonItem>
           <IonLabel>Fecha de Cita</IonLabel>
-          <IonDatetime presentation="date" value={selectFecha} onIonChange={handleDateChange}  />
+          <IonDatetime
+            presentation="date"
+            value={selectFecha}
+            onIonChange={handleDateChange}
+          />
         </IonItem>
-
         {loading ? (
           <IonSpinner name="dots" />
         ) : (
           <>
-            {selectFecha && (
-              <IonItem>
-                <IonLabel>Hora</IonLabel>
-                <IonSelect 
-                  value={selectHora} 
-                  placeholder="Selecciona una hora" 
-                  onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setSelectHora(e.detail.value)}
-                >
-                  {horarios.length > 0 ? (
-                    horarios.map((hora, index) => (
-                      <IonSelectOption key={index} value={hora}>
-                        {hora}
-                      </IonSelectOption>
-                    ))
-                  ) : (
-                    <IonSelectOption disabled>No hay horarios disponibles</IonSelectOption>
-                  )}
-                </IonSelect>
-              </IonItem>
-            )}
-
+            <IonItem>
+              <IonLabel>Hora</IonLabel>
+              <IonSelect
+                value={selectHora}
+                placeholder="Selecciona una hora"
+                onIonChange={(e: any) => setSelectHora(e.detail.value)}
+              >
+                {horarios.map((hora, index) => (
+                  <IonSelectOption key={index} value={hora}>
+                    {hora}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
             <IonItem>
               <IonLabel>Tipo de Cita</IonLabel>
               <IonSelect
                 value={idTipoCita || ""}
-                placeholder="Selecciona el tipo de cita"
                 onIonChange={handleTipoCitaChange}
               >
                 {tiposCita.map((tipo) => (
@@ -236,33 +244,65 @@ const CrearCita = () => {
                 ))}
               </IonSelect>
             </IonItem>
-
             {idTipoCita === 5 && (
               <IonItem>
                 <IonLabel>Descripción</IonLabel>
                 <IonTextarea
                   value={descripcionT}
-                  onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setDescripcionT(e.detail.value)}
-                  placeholder="Describe el tipo de tratamiento"
-                  maxlength={200}
+                  onIonChange={(e: any) => setDescripcionT(e.detail.value)}
                 />
-                <IonText>{descripcionT.length}/200 caracteres</IonText>
               </IonItem>
             )}
-
             <IonItem>
-              <IonLabel>Costo: </IonLabel>
+              <IonLabel>Costo:</IonLabel>
               <IonText>${costo}</IonText>
             </IonItem>
-
             <IonButton expand="block" onClick={handleSubmit}>
               Confirmar Cita
             </IonButton>
+            
           </>
         )}
+        {/* Modal para la encuesta */}
+        <IonModal isOpen={showEncuesta}>
+          <IonContent>
+            <h2 className="ion-text-center">Encuesta de Satisfacción</h2>
+            <IonList>
+              {preguntas.map((pregunta, index) => (
+                <IonItem key={index}>
+                  <IonLabel>{pregunta}</IonLabel>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {/* Mostrar estrellas según la calificación */}
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <IonIcon
+                        key={rating}
+                        icon={respuestas[index] >= rating ? star : starOutline} // Usa star o starOutline dependiendo de la calificación
+                        style={{
+                          fontSize: "20px",
+                          color: respuestas[index] >= rating ? "gold" : "gray", // Estrellas doradas si es seleccionada
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleStarClick(index, rating)} // Asigna valor a la pregunta correspondiente
+                      />
+                    ))}
+                  </div>
+                </IonItem>
+              ))}
+            </IonList>
+
+
+
+            {/* Botón para enviar la encuesta */}
+            <IonButton expand="block" onClick={enviarEncuesta}>
+              Enviar Encuesta
+            </IonButton>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );
 };
 
+
 export default CrearCita;
+

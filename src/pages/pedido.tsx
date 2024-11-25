@@ -1,117 +1,132 @@
+// components/CreatePedido.tsx
 import React, { useState } from 'react';
-import { IonButton, IonInput, IonItem, IonLabel, IonList, IonToast } from '@ionic/react';
+import { createPedido } from '../services/ApiPedido';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonInput, IonLabel, IonItem, IonText } from '@ionic/react';
 
-const Pedidos: React.FC = () => {
-  // Estado para almacenar los datos del formulario
-  const [clienteId, setClienteId] = useState<string>('');
-  const [direccion, setDireccion] = useState<string>('');
-  const [metodoPago, setMetodoPago] = useState<string>('');
-  const [paqueteria, setPaqueteria] = useState<string>('');
-  const [total, setTotal] = useState<number>(0);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+const CreatePedido: React.FC = () => {
+  const [formData, setFormData] = useState({
+    IdCliente: '',
+    TotalPe: '',
+    IdMetodoPago: '',
+    IdEstado_Pedido: 1, // PENDIENTE
+    IdEstado_Envio: 1, // PENDIENTE
+    IdDireccion: '',
+    IdPaqueteria: '',
+    IdEmpleado: '',
+  });
+  const [pedido, setPedido] = useState(null);
+  const [error, setError] = useState('');
 
-  // Función para enviar el formulario al backend usando fetch
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const pedidoData = {
-      IdCliente: clienteId,
-      Direccion: direccion,
-      MetodoPago: metodoPago,
-      Paqueteria: paqueteria,
-      Total: total,
-    };
-
     try {
-      const response = await fetch('https://tu-api-url.com/pedidos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(pedidoData),
-      });
-
-      if (response.ok) {
-        // Mostrar un mensaje de éxito
-        setToastMessage('Pedido creado exitosamente');
-        setShowToast(true);
-
-        // Limpia los campos del formulario
-        setClienteId('');
-        setDireccion('');
-        setMetodoPago('');
-        setPaqueteria('');
-        setTotal(0);
-      } else {
-        // Manejo de error si la respuesta no es exitosa
-        setToastMessage('Error al crear el pedido');
-        setShowToast(true);
-      }
+      const createdPedido = await createPedido(formData);
+      setPedido(createdPedido.pedido); // Almacenar los datos del pedido creado
+      setError(''); // Limpiar el error si la creación fue exitosa
     } catch (error) {
-      console.error('Error al crear el pedido:', error);
-      setToastMessage('Error al crear el pedido');
-      setShowToast(true);
+      setError('Error al crear el pedido. Inténtalo nuevamente.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <IonList>
-        <IonItem>
-          <IonLabel position="stacked">ID del Cliente</IonLabel>
-          <IonInput
-            value={clienteId}
-            onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setClienteId(e.detail.value!)}
-            required
-          />
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">Dirección</IonLabel>
-          <IonInput
-            value={direccion}
-            onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setDireccion(e.detail.value!)}
-            required
-          />
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">Método de Pago</IonLabel>
-          <IonInput
-            value={metodoPago}
-            onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setMetodoPago(e.detail.value!)}
-            required
-          />
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">Paquetería</IonLabel>
-          <IonInput
-            value={paqueteria}
-            onIonChange={(e: { detail: { value: React.SetStateAction<string>; }; }) => setPaqueteria(e.detail.value!)}
-            required
-          />
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">Total</IonLabel>
-          <IonInput
-            type="number"
-            value={total}
-            onIonChange={(e: { detail: { value: string; }; }) => setTotal(parseFloat(e.detail.value!))}
-            required
-          />
-        </IonItem>
-      </IonList>
-      <IonButton type="submit" expand="block">
-        Crear Pedido
-      </IonButton>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Crear Pedido</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <form onSubmit={handleSubmit}>
+          <IonItem>
+            <IonLabel position="floating">Id Cliente</IonLabel>
+            <IonInput
+              type="text"
+              name="IdCliente"
+              value={formData.IdCliente}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
+          
+          <IonItem>
+            <IonLabel position="floating">Total</IonLabel>
+            <IonInput
+              type="number"
+              name="TotalPe"
+              value={formData.TotalPe}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
 
-      <IonToast
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message={toastMessage}
-        duration={2000}
-      />
-    </form>
+          <IonItem>
+            <IonLabel position="floating">Método de Pago</IonLabel>
+            <IonInput
+              type="text"
+              name="IdMetodoPago"
+              value={formData.IdMetodoPago}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="floating">Dirección</IonLabel>
+            <IonInput
+              type="text"
+              name="IdDireccion"
+              value={formData.IdDireccion}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="floating">Paquetería</IonLabel>
+            <IonInput
+              type="text"
+              name="IdPaqueteria"
+              value={formData.IdPaqueteria}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="floating">Empleado</IonLabel>
+            <IonInput
+              type="text"
+              name="IdEmpleado"
+              value={formData.IdEmpleado}
+              onIonChange={handleChange}
+              required
+            />
+          </IonItem>
+
+          <IonButton expand="full" type="submit" color="primary">
+            Crear Pedido
+          </IonButton>
+        </form>
+
+        {error && <IonText color="danger"><p>{error}</p></IonText>}
+        
+        {pedido && (
+          <div>
+            <h3>Pedido Creado</h3>
+            <pre>{JSON.stringify(pedido, null, 2)}</pre>
+          </div>
+        )}
+      </IonContent>
+    </IonPage>
   );
 };
 
-export default Pedidos;
+export default CreatePedido;

@@ -1,11 +1,6 @@
 import { IonPage, IonHeader, IonContent, IonImg, IonMenuButton, IonSearchbar, IonToolbar, IonItem, IonLabel, IonList, IonRouterLink } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import Footer from "../components/Footer";
 import Header from "../components/UI/header";
-import CerrarSesion from "./Auth/cerrarSesion";
-import ProductosOfertas from "../components/Shared/productosOfertas";
-import ProductsViewCart from "./productosViewCart";
-import Tratamientos from "../components/tratamientos";
 import CrearCita from "../components/agendarCita";
 import { useSearchContext } from "../contexts/SearcContect";
 
@@ -57,14 +52,13 @@ const AgendaCita: React.FC = () =>{
     };
  
     return(
-        <IonPage id="main-content" style={{ marginBottom: '50px' }}>
-        <Header />
-        <IonContent>
+        <>
+        <>
         
-        <CrearCita />
-        </IonContent>
+        
+        </>
 
-        </IonPage>
+        </>
 
     );
 }
