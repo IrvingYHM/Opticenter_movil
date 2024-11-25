@@ -1,4 +1,4 @@
-import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonInput, IonButton, IonModal, IonItem, IonList, IonRouterLink } from "@ionic/react";
+import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonInput, IonButton, IonModal, IonItem, IonList, IonRouterLink, IonToast, IonIcon  } from "@ionic/react";
 import React, { useState, useEffect, useRef  } from "react";
 import { useParams,useHistory } from 'react-router-dom';
 import Header from "../components/UI/header";
@@ -7,6 +7,7 @@ import { CardElement, CardCvcElement,CardNumberElement,CardExpiryElement, Elemen
 import { toast } from 'react-toastify';
 import './carrito.css';
 import { useSearchContext } from "../contexts/SearcContect";
+import { closeCircle } from "ionicons/icons";
 
 const stripePromise = loadStripe('pk_test_51QF7CwP4u0AspHWqVkcLHlGObKirereYBP7bQJOetZ3Bgv1HQDXfCaEQBWM8cv3kvJ69rNvjdOwsMw4nzqgSxGhN00ik1ViWMd');
 
@@ -107,7 +108,6 @@ const Carrito: React.FC = () => {
     setShowPaymentModal(false); 
     };
 
-    
     const handlePayment = async () => {
         setShowPaymentModal(true);
         try {
@@ -140,12 +140,10 @@ const Carrito: React.FC = () => {
         if (isProcessingPayment || !stripe || !elements || !clientSecret) return;
         setIsProcessingPayment(true);
     
-        const cardElement = elements.getElement(CardElement);
-        if (!cardElement) return;
-    
-        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        const cardNumber = elements.getElement(CardNumberElement);
+        const  { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
-                card: cardElement,
+                card: cardNumber!,
             },
         });
     
@@ -367,38 +365,39 @@ const Carrito: React.FC = () => {
                                         Pagar
                                     </IonButton>
                                     {/**tomar los datos de stripe y crear el formulario */}
-                                    <IonModal isOpen={showPaymentModal} onDidDismiss={handleCloseModal} className="ion-modal-custom">
-                                        <div className="conten">
-                                            <p>Total a pagar ${total}</p>
-                                            <form ref={paymentFormRef} onSubmit={handleSubmit} className="form-container">
-                                                <CardElement 
-                                                options={{
-                                                    style: {
-                                                        base: {
-                                                            color: "#000", 
-                                                            fontSize: "16px", 
-                                                            "::placeholder": {
-                                                                color: "#a0aec0", 
-                                                            },
-                                                            padding: "10px",
-                                                        },
-                                                        invalid: {
-                                                            color: "#e53e3e", 
-                                                        },
-                                                    },
-                                                }}
-                                                className="p-2 border rounded-lg"
-                                            />
-                                                <IonButton
-                                                 type="submit" 
-                                                 expand="full" 
-                                                 className="bg-green-500"
-                                                 disabled={isProcessingPayment}>
-                                                    Confirmar Pago
-                                                </IonButton>
-                                            </form>
+                                    <IonModal
+                                    isOpen={showPaymentModal}
+                                    onDidDismiss={handleCloseModal}
+                                    className="custom-modal"
+                                    >
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                        <h2 className="modal-title">Formulario de Pago</h2>
+                                        <IonButton fill="clear" onClick={handleCloseModal}>
+                                            <IonIcon name="CloseCircule"></IonIcon>
+                                        </IonButton>
                                         </div>
+                                        <form ref={paymentFormRef} onSubmit={handleSubmit} className="payment-form">
+                                        <div className="form-group">
+                                            <label htmlFor="cardNumber">Número de Tarjeta</label>
+                                            <CardNumberElement className="stripe-input" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="cardExpiry">Fecha de Expiración</label>
+                                            <CardExpiryElement className="stripe-input" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="cardCvc">CVC</label>
+                                            <CardCvcElement className="stripe-input" />
+                                        </div>
+                                        <IonButton expand="block" type="submit" disabled={isProcessingPayment}>
+                                            {isProcessingPayment ? "Procesando..." : "Pagar"}
+                                        </IonButton>
+                                        </form>
+                                    </div>
                                     </IonModal>
+
+
                                 </IonCardContent>
                             </IonCard>
                         </div>

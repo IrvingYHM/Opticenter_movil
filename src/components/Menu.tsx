@@ -90,27 +90,29 @@ const Menu: React.FC = () => {
             </IonMenuToggle>
           )}
           <IonMenuToggle>
-            <IonItem button routerLink="/#">
+            <IonItem button routerLink="/Acercade">
               <IonIcon icon={people} slot="start" />
-              <IonLabel>¿Quiénes somos?</IonLabel>
+              <IonLabel>Sobre Nosotros</IonLabel>
             </IonItem>
           </IonMenuToggle>
           <IonMenuToggle>
             <IonItem>
               <IonIcon icon={call} slot="start" />
-              <IonLabel>Contacto : +52 77#######</IonLabel>
+              <IonLabel>Contacto</IonLabel><br />
+              <IonLabel></IonLabel>
+
             </IonItem>
           </IonMenuToggle>
           {!isAuthenticated ? ( 
             <IonMenuToggle>
-              <IonItem button routerLink="/IniciaSesion">
+              <IonItem button routerLink="/home">
                 <IonIcon icon={logOut} slot="start" />
                 <IonLabel>Salir</IonLabel>
               </IonItem>
             </IonMenuToggle>
           ) : ( 
             <IonMenuToggle>
-              <IonItem button routerLink="/misCompras">
+              <IonItem button routerLink="/home">
                 <IonIcon icon={logOut} slot="start" />
                 <IonLabel>Salir</IonLabel>
               </IonItem>

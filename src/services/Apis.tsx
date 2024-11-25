@@ -31,6 +31,12 @@ export const addProductToCart = async (productId: number) => {
   return response.data;
 };
 
+export const api = axios.create({
+  baseURL: 'API_URL', // Cambia por la URL de tu backend
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 export const LoginUser = async () =>{
   const response = await axios.post(`${API_URL}/auth/login`)

@@ -89,7 +89,6 @@ const Home: React.FC = () => {
           
           <HomeOne />
 
-          <CategoriasCarrucel />
           
           <p className='text-center'>Productos en oferta</p>
           <ProductosOfertas />

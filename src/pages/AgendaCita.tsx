@@ -52,14 +52,13 @@ const AgendaCita: React.FC = () =>{
     };
  
     return(
-        <IonPage id="main-content" style={{ marginBottom: '50px' }}>
-        <Header />
-        <IonContent>
+        <>
+        <>
         
-        <CrearCita />
-        </IonContent>
+        
+        </>
 
-        </IonPage>
+        </>
 
     );
 }
