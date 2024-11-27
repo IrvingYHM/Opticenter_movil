@@ -56,10 +56,14 @@ import React from 'react';
             login();
             toast.success('Inicio de sesión exitoso');
             setUsuarioLogueado(true);
+
             setTimeout(() => {
               window.location.href = '/HomeAuth';
             }, 2000);
-          } else {
+          } if (data.tieneCitas) {
+            toast.info('Tienes citas programadas. Revisa tu agenda.');
+          }
+          else {
             console.error('Error de inicio de sesión:', response.status); 
             setIntentosFallidos(intentosFallidos + 1);
             if (intentosFallidos >= 2) {
