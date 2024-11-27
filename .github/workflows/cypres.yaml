@@ -14,7 +14,7 @@ on:
       - julio          
       - irving         
       - jesus          
-  workflow_dispatch:   # Activación manual opcional
+  workflow_dispatch:   # Activación manual 
 
 jobs:
   cypress:
@@ -40,4 +40,5 @@ jobs:
           sleep 5   # Esperar un momento para que el servidor esté listo
 
       - name: Run Cypress tests
-        run: npx cypress run             # Ejecutar las pruebas de Cypress
+        run: npx cypress run             # Ejecutar las pruebas de Cypres
+
