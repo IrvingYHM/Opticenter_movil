@@ -5,7 +5,7 @@ on:
     branches:
       - master         # Despliegue en producción
       - julio          # Ramas de desarrollo
-      - irving         # Ramas de desarrollo
+      - irving          # Ramas de desarrollo
       - jesus          # Ramas de desarrollo
       - feature/*      
   pull_request:
@@ -40,5 +40,31 @@ jobs:
           sleep 5   # Esperar un momento para que el servidor esté listo
 
       - name: Run Cypress tests
-        run: npx cypress run             # Ejecutar las pruebas de Cypres
+        run: npx cypress run             # Ejecutar las pruebas de Cypress
 
+  deploy:
+    needs: cypress
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2      # Clonar el repositorio
+
+      - name: Install Butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip -d butler
+          sudo mv butler/butler /usr/local/bin
+          butler --version
+
+      - name: Deploy to itch.io
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_API_KEY }}
+        run: |
+          # Cambia 'dist/' por el directorio donde se genera tu build
+          if [ -d "dist" ]; then
+            echo "Carpeta dist encontrada. Realizando el despliegue..."
+            butler push dist/ 05JesusMoreno/opticenter-mobile:platform
+          else
+            echo "Carpeta dist no encontrada. Deteniendo despliegue."
+            exit 1
+          fi
