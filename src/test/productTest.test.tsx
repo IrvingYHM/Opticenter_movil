@@ -1,4 +1,3 @@
-
 import { render, screen, act } from '@testing-library/react';
 import ProductosOfertas from '../components/Shared/productosOfertas';
 import { vi } from 'vitest';
@@ -14,14 +13,7 @@ describe('ProductosOfertas', () => {
   });
 
   test('Muestra productos correctamente al cargar', async () => {
-    await act(async() => {
-
-      render(<ProductosOfertas />);
-    });
-
-
-
-    
+    // Mock de los datos de la API
     const productosMock = [
       {
         IdProducto: 1,
@@ -39,12 +31,20 @@ describe('ProductosOfertas', () => {
       },
     ];
 
+    // Configura el mock de fetch
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => productosMock,
     });
 
+    // Renderizamos el componente
+    await act(async () => {
+      render(<ProductosOfertas />);
+    });
 
-
+    // Verificamos que los productos se muestren
+    expect(await screen.findByText('Producto 1')).toBeInTheDocument();
+    expect(await screen.findByText('Descripción del producto 1')).toBeInTheDocument();
+    expect(await screen.findByText('$90')).toBeInTheDocument(); // PrecioOferta
   });
 });
