@@ -21,33 +21,35 @@ jobs:
      - name: Install dependencies
        run: npm install
         # Construir la aplicación Ionic
-      - name: Build Ionic app
-        run: npm run build
+     - name: Build Ionic app
+       run: npm run build
 
       # Instalar Capacitor y sincronizar Android
-      - name: Sync Capacitor Android
-        run: |
-          npx cap sync android
+     - name: Sync Capacitor Android
+       run: |
+         npx cap sync android
 
       # Configurar JDK y Android SDK
-      - name: Setup Android environment
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 33
-          build-tools: 33.0.2
+     - name: Setup Android environment
+       uses: android-actions/setup-android@v2
+       with:
+        api-level: 33
+         build-tools: 33.0.2
 
       # Construir el APK
-      - name: Build APK
+     - name: Build APK
         run: |
-          cd android
-          ./gradlew assembleRelease
+         cd android
+         ./gradlew assembleRelease
 
       # Guardar el APK como artefacto
-      - name: Upload APK
+     - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+         name: app-release.apk
+         path: android/app/build/outputs/apk/release/app-release.apk
+
+         
 
 
     
