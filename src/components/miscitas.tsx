@@ -66,7 +66,7 @@ const miscitas = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://backopt-production.up.railway.app/cita/usuario/${idUsuario}`
+          `http://localhost:3000/cita/usuario/${idUsuario}`
         );
         const data: Cita[] = response.data;
         setCitas(data);

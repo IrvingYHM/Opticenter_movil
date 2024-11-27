@@ -22,7 +22,7 @@ import { format } from "date-fns";
 import { useHistory } from "react-router-dom";
 import Header from "./UI/header";// Paquete para estrellas
 import { star, starOutline } from "ionicons/icons"; // Importar los iconos de estrella
-
+import '../pages/carrito.css';
 
 
 // Función para decodificar el JWT
@@ -50,7 +50,8 @@ const CrearCita = () => {
   const [horarios, setHorarios] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [showEncuesta, setShowEncuesta] = useState(false); // Estado para mostrar la encuesta
-  
+  const [encuestaCompletada, setEncuestaCompletada] = useState(false);
+  const [encuestaPendiente, setEncuestaPendiente] = useState(false);
   const preguntas = [
     "¿Qué tan fácil fue encontrar la información que buscabas?",
     "¿Cómo calificarías la facilidad de uso del sistema para agendar tu cita?",
@@ -83,9 +84,11 @@ const CrearCita = () => {
     if (token) {
       const decodedToken = parseJwt(token);
       setIdCliente(decodedToken.clienteId);
-    }
-  }, []);
+    } 
+    
+  }, [idCliente]);
 
+    
   const handleTipoCitaChange = (e: CustomEvent) => {
     const tipoCitaSeleccionada = tiposCita.find(
       (tipo) => tipo.id === parseInt(e.detail.value)
@@ -104,7 +107,7 @@ const CrearCita = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://backopt-production.up.railway.app/horarios/HrPorFecha?fecha=${fechaFormateada}`
+        `http://localhost:3000/horarios/HrPorFecha?fecha=${fechaFormateada}`
       );
       const data = await response.json();
 
@@ -119,6 +122,7 @@ const CrearCita = () => {
       toast.error("Error al cargar los horarios disponibles");
     }
     setLoading(false);
+    verificaencuestaCompletada()
   };
 
   const handleDateChange = (e: CustomEvent) => {
@@ -139,7 +143,7 @@ const CrearCita = () => {
     ) {
       try {
         const citaResponse = await fetch(
-          "https://backopt-production.up.railway.app/cita",
+          "http://localhost:3000/cita",
           {
             method: "POST",
             headers: {
@@ -153,13 +157,20 @@ const CrearCita = () => {
               Costo: costo,
               IdEstadoCita: 1,
               DescripcionT: idTipoCita === 5 ? descripcionT : null,
+              estado: 'Pendiente',
             }),
           }
         );
 
         if (citaResponse.status === 201) {
           toast.success("Cita agendada exitosamente");
-          setShowEncuesta(true); // Mostrar encuesta al finalizar
+          verificaencuestaCompletada()
+          if (!encuestaCompletada) {
+            setShowEncuesta(true);
+          } else {
+            toast.info("Encuesta ya completada previamente. Gracias!");
+            history.push("/miscitas")
+          } // Mostrar encuesta al finalizar
         } else {
           toast.error("Hubo un problema al agendar la cita");
         }
@@ -170,31 +181,74 @@ const CrearCita = () => {
       toast.error("Por favor, completa todos los campos");
     }
   };
+  const verificaencuestaCompletada = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/EncuestaM/completada?idUsuario=${idCliente}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if(data.completada){
+          setEncuestaCompletada(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error al comprobar si la encuesta fue completada:", error);
+    }
+  };
 
+const saveEncuestaPendiente = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/guardarEncuestaPendientes", {
+      method: "POST",
+      headers: {"Content-Type": "application/json",},
+      body: JSON.stringify({
+        idUsuario: idCliente
+      }),
+    });
+
+    if (response.ok) {
+      toast.success("Estado de la encuesta marcado como pendiente");
+    } else {
+      toast.error("Error al guardar el estado de la encuesta");
+    }
+  } catch (error) {
+    console.error("Error al guardar la encuesta pendiente:", error);
+    toast.error("Error al guardar el estado de la encuesta");
+  }
+};
   const enviarEncuesta = async () => {
     try {
       const response = await fetch(
-        "https://backopt-production.up.railway.app/EncuestaM",
+        "http://localhost:3000/EncuestaM",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
-            idUsuario: idCliente, respuestas 
+            idUsuario: idCliente, respuestas, preguntas
           }),
         }
       );
 
       if (response.ok) {
         toast.success("Gracias por completar la encuesta");
-      } else {
-        toast.error("Error al enviar la encuesta");
+      } 
+      if (response.status === 409){
+        toast.success("El usuario ya completó la encuesta.");
       }
     } catch (error) {
       toast.error("Error al enviar la encuesta");
     } finally {
+      setEncuestaCompletada(true); // Marcar como completada
       setShowEncuesta(false);
       history.push("/miscitas");
     }
+  };
+  const handleModalDismiss = () => {
+    if (!encuestaCompletada) {
+      // Ejecutar lógica solo si la encuesta no se completó
+      saveEncuestaPendiente();
+    }
+    setShowEncuesta(false); // Cerrar el modal
   };
 
   return (
@@ -264,7 +318,7 @@ const CrearCita = () => {
           </>
         )}
         {/* Modal para la encuesta */}
-        <IonModal isOpen={showEncuesta}>
+        <IonModal isOpen={showEncuesta} onDidDismiss={handleModalDismiss} className="custom-modal" >
           <IonContent>
             <h2 className="ion-text-center">Encuesta de Satisfacción</h2>
             <IonList>
