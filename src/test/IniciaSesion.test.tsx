@@ -4,23 +4,24 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import React from 'react';
 
+// Mocks de componentes
 vi.mock('../components/UI/Header', () => ({
     default: () => <div>Header</div>,
-  }));
+}));
 vi.mock('../components/Formulario', () => ({
-  default: () => <div>Login</div>,
+    default: () => <div>Login</div>,
 }));
 
 describe('Pruebas del componente IniciaSesion', () => {
-  test('renderisa Header, Login', () => {
+  test('renderiza Header y Login', () => {
     render(
       <Router>
         <IniciaSesion />
       </Router>
     );
-    
-    expect(screen.queryByText('Header')).toBeDefined();
-    expect(screen.queryByText('Login')).toBeDefined();
 
+    // Verifica que los componentes simulados estén presentes
+    expect(screen.queryByText('Header')).toBeInTheDocument();
+    expect(screen.queryByText('Login')).toBeInTheDocument();
   });
 });
