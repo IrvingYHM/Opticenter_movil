@@ -63,7 +63,7 @@ jobs:
           # Cambia 'dist/' por el directorio donde se genera tu build
           if [ -d "dist" ]; then
             echo "Carpeta dist encontrada. Realizando el despliegue..."
-            butler push dist/ 05JesusMoreno/opticenter-mobile:platform
+            butler push release/ 05JesusMoreno/opticenter-mobile:platform
           else
             echo "Carpeta dist no encontrada. Deteniendo despliegue."
             exit 1
