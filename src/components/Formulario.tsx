@@ -9,12 +9,17 @@ import {IonContent,IonPage,IonInput,IonButton,IonLabel,IonItem,IonIcon,IonToast,
   import { AuthContext } from '../contexts/Auth';
 import React from 'react';
   
+// Función para decodificar el JWT y obtener el clienteId
+
+
   const Login = () => {
     const [mostrarContra, setMostrarContra] = useState(false);
     const [intentosFallidos, setIntentosFallidos] = useState(0);
     const [token, setToken] = useState(null);
     const [usuarioLogueado, setUsuarioLogueado] = useState(false);
     const { login } = useContext(AuthContext);
+    
+  
   
     const {
       register,

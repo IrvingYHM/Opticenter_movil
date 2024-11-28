@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   IonContent,
   IonPage,
@@ -52,6 +52,8 @@ const CrearCita = () => {
   const [showEncuesta, setShowEncuesta] = useState(false); // Estado para mostrar la encuesta
   const [encuestaCompletada, setEncuestaCompletada] = useState(false);
   const [encuestaPendiente, setEncuestaPendiente] = useState(false);
+  const [cargando, setCargando] = useState(true);
+  const accesoRegistrado = useRef(false);
   const preguntas = [
     "¿Qué tan fácil fue encontrar la información que buscabas?",
     "¿Cómo calificarías la facilidad de uso del sistema para agendar tu cita?",
@@ -84,10 +86,55 @@ const CrearCita = () => {
     if (token) {
       const decodedToken = parseJwt(token);
       setIdCliente(decodedToken.clienteId);
-    } 
-    
+    }     
   }, [idCliente]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decodedToken = parseJwt(token);
+      const idUsuario = decodedToken.clienteId;
+      setIdCliente(decodedToken.clienteId);
+
+      if (!idUsuario) {
+        console.error("El idUsuario no se pudo obtener del token.");
+        return;
+      }
+
+      if (!accesoRegistrado.current && !encuestaCompletada) {
+        const registrarAcceso = async () => {
+          try {
+            const response = await fetch("http://localhost:3000/verificaE", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ idUsuario }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data.estado === "Encuesta ya completada") {
+                setEncuestaCompletada(true);
+              }
+            } else {
+              console.error("Error al registrar el acceso al feedback");
+            }
+          } catch (error) {
+            console.error("Error al registrar acceso:", error);
+          } finally {
+            setCargando(false);
+          }
+        };
+
+        registrarAcceso();
+        accesoRegistrado.current = true;
+      } else {
+        setCargando(false);
+      }
+    } else {
+      history.push("/IniciaSesion");
+    }
+  }, [encuestaCompletada, history]);
     
   const handleTipoCitaChange = (e: CustomEvent) => {
     const tipoCitaSeleccionada = tiposCita.find(
@@ -122,7 +169,7 @@ const CrearCita = () => {
       toast.error("Error al cargar los horarios disponibles");
     }
     setLoading(false);
-    verificaencuestaCompletada()
+    
   };
 
   const handleDateChange = (e: CustomEvent) => {
@@ -164,7 +211,7 @@ const CrearCita = () => {
 
         if (citaResponse.status === 201) {
           toast.success("Cita agendada exitosamente");
-          verificaencuestaCompletada()
+         
           if (!encuestaCompletada) {
             setShowEncuesta(true);
           } else {
@@ -181,50 +228,21 @@ const CrearCita = () => {
       toast.error("Por favor, completa todos los campos");
     }
   };
-  const verificaencuestaCompletada = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/EncuestaM/completada?idUsuario=${idCliente}`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        if(data.completada){
-          setEncuestaCompletada(true);
-        }
-      }
-    } catch (error) {
-      console.error("Error al comprobar si la encuesta fue completada:", error);
-    }
-  };
-
-const saveEncuestaPendiente = async () => {
-  try {
-    const response = await fetch("http://localhost:3000/guardarEncuestaPendientes", {
-      method: "POST",
-      headers: {"Content-Type": "application/json",},
-      body: JSON.stringify({
-        idUsuario: idCliente
-      }),
-    });
-
-    if (response.ok) {
-      toast.success("Estado de la encuesta marcado como pendiente");
-    } else {
-      toast.error("Error al guardar el estado de la encuesta");
-    }
-  } catch (error) {
-    console.error("Error al guardar la encuesta pendiente:", error);
-    toast.error("Error al guardar el estado de la encuesta");
-  }
-};
+ 
   const enviarEncuesta = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/EncuestaM",
+        "http://localhost:3000/RegistroE",
         {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
-            idUsuario: idCliente, respuestas, preguntas
+            idUsuario: idCliente, 
+            question1:respuestas[0],
+            question2:respuestas[1],
+            question3:respuestas[2],
+            question4:respuestas[3], 
+            question5:respuestas[4],
           }),
         }
       );
@@ -246,7 +264,6 @@ const saveEncuestaPendiente = async () => {
   const handleModalDismiss = () => {
     if (!encuestaCompletada) {
       // Ejecutar lógica solo si la encuesta no se completó
-      saveEncuestaPendiente();
     }
     setShowEncuesta(false); // Cerrar el modal
   };

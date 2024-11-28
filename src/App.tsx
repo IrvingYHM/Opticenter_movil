@@ -61,6 +61,7 @@ import CrearCita from './components/agendarCita';
 import MiCompra from './pages/misCompras';
 import CreatePedido from './pages/pedido';
 import AcercaDe from './components/Acercade';
+import encuesta from './components/encuesta';
 
 
 setupIonicReact();
@@ -84,7 +85,7 @@ const App: React.FC = () => (
           <Route path="/Tratamiento"  component={tratamientos} />
           <Route path="/Crearcuenta"  component={Registro} />
           <Route path="/Productos/:id" component={DetalleProducto} /> 
-          
+          <Route path="/encuesta" component={encuesta} />
           <Route path="/Acercade"  component={AcercaDe} />
 
         {/**Rutas Protegidas */}
